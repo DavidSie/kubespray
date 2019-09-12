@@ -1,0 +1,9 @@
+- name: Create cloud-controller-manager manifest
+  template:
+    src: cloud-controller-manager.yaml.j2
+    dest: "{{ kube_config_dir }}/cloud-controller-manager.yaml"
+
+- name: Apply  cloud-controller-manager.yaml
+  shell: "kubectl apply -f {{ kube_config_dir }}/cloud-controller-manager.yaml"
+  environment:
+    KUBECONFIG: "{{ kube_config_dir }}/admin.conf" 

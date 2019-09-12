@@ -76,3 +76,6 @@
 
 - name: Include kubeadm secondary server apiserver fixes
   include_tasks: kubeadm-fix-apiserver.yml
+
+- name: Include external cloud controller
+  include_tasks: external-cloud-controller.yml
