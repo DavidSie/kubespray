@@ -1,0 +1,20 @@
+- name: Create cloud-controller-manager manifest
+    template:
+      src: cloud-controller-manager.yaml.j2
+      dest: "{{ kube_config_dir }}/cloud-controller-manager.yaml"
+
+
+- name: Create cloud config secret manifest
+  shell: "kubectl create secret -n kube-system generic cloud-config --from-literal=cloud.conf="$(cat {{ kube_config_dir }}/cloud_config)" --dry-run -o yaml > {{ kube_config_dir }}/cloud-config-secret.yaml"
+  environment:
+    KUBECONFIG: "{{ kube_config_dir }}/admin.conf"
+
+- name: Apply  cloud config secret
+  shell: "kubectl -f apply {{ kube_config_dir }}/cloud-config-secret.yaml"
+  environment:
+    KUBECONFIG: "{{ kube_config_dir }}/admin.conf"
+
+- name: Apply  cloud-controller-manager.yaml
+  shell: "kubectl apply -f {{ kube_config_dir }}/cloud-controller-manager.yaml"
+  environment:
+    KUBECONFIG: "{{ kube_config_dir }}/admin.conf"
